@@ -1,0 +1,4 @@
+@model IEnumerable<GestaoAgenda.Models.Agendamento>
+@{ ViewData["Title"] = "Agenda"; }
+<div class="d-flex justify-content-between align-items-center mb-4"><h2 class="fw-bold">Agenda</h2><a asp-action="Create" class="btn btn-primary">Novo agendamento</a></div>
+<div class="table-responsive bg-caixa p-4"><table class="table table-striped"><thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Serviço</th><th>Status</th><th></th></tr></thead><tbody>@foreach(var item in Model){<tr><td>@item.Data.ToString("dd/MM/yyyy")</td><td>@item.Hora.ToString(@"hh\:mm")</td><td>@item.Cliente.Nome</td><td>@item.Servico.Nome</td><td>@item.Status</td><td><a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Detalhes</a> <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Editar</a> <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Excluir</a></td></tr>}</tbody></table></div>

@@ -1,0 +1,4 @@
+@model GestaoAgenda.Models.Cliente
+@{ ViewData["Title"] = "Editar cliente"; }
+<h2 class="fw-bold mb-4">Editar cliente</h2><div class="bg-caixa p-4"><form asp-action="Edit" asp-route-id="@Model.Id"><input type="hidden" asp-for="Id"/><partial name="_Form" model="Model"/><button type="submit" class="btn btn-primary">Salvar</button> <a asp-action="Index" class="btn btn-secondary">Cancelar</a></form></div>
+@section Scripts {<partial name="_ValidationScriptsPartial" />}

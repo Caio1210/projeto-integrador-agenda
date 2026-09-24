@@ -1,0 +1,3 @@
+@model GestaoAgenda.Models.Cliente
+@{ ViewData["Title"] = "Detalhes do cliente"; }
+<h2 class="fw-bold mb-4">Detalhes do cliente</h2><div class="bg-caixa p-4"><p><strong>Nome:</strong> @Model.Nome</p><p><strong>Telefone:</strong> @Model.Telefone</p><p><strong>E-mail:</strong> @Model.Email</p><a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a> <a asp-action="Index" class="btn btn-secondary">Voltar</a></div>

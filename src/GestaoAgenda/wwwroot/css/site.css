@@ -1,0 +1,380 @@
+:root {
+    --cor-primaria: #4A3367;
+    --cor-rosa: #FFE1FF;
+    --cor-gradiente-inicio: rgba(161, 127, 213, 1);
+    --cor-gradiente-meio: rgba(208, 176, 234, 1);
+    --cor-gradiente-fim: rgba(255, 225, 255, 1);
+    --sombra-leve: 0 4px 15px rgba(0,0,0,0.05);
+    --sombra-hover: 0 12px 30px rgba(74, 51, 103, 0.15);
+}
+
+html {
+    font-size: 16px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #ffe1ff70;
+    color: var(--cor-primaria) !important;
+}
+
+.form-floating>.form-control-plaintext::placeholder,
+.form-floating>.form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
+}
+
+.form-floating>.form-control-plaintext:focus::placeholder,
+.form-floating>.form-control:focus::placeholder {
+    text-align: start;
+}
+
+.cor-primaria {
+    color: var(--cor-primaria) !important;
+}
+
+.logo {
+    max-height: 64px;
+}
+
+.bg-rosa {
+    background-color: var(--cor-rosa) !important;
+    background: linear-gradient(0deg, var(--cor-gradiente-inicio) 0%, var(--cor-gradiente-meio) 16%, var(--cor-gradiente-fim) 100%);
+}
+
+.border-cor-primaria {
+    border-color: var(--cor-primaria) !important;
+}
+
+.btn-profile-photo {
+    border-radius: 12px !important;
+    -moz-border-radius: 12px !important;
+    -webkit-border-radius: 12px !important;
+    height: 36px;
+    min-width: 36px;
+    overflow: hidden;
+    width: 36px;
+}
+
+.btn {
+    border-radius: 16px 0 16px 0;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-danger {
+    background-color: #c02942 !important;
+    border-color: #c02942 !important;
+}
+
+.btn-success {
+    background-color: #4f8b89 !important;
+    border-color: #4f8b89 !important;
+}
+
+.btn-editar {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #fff;
+}
+
+.btn-voltar {
+    background-color: #f9cdad;
+    border-color: #f9cdad;
+}
+
+.btn-principal,
+.btn-principal:hover {
+    border-radius: 24px 0 24px 0;
+    color: #fff;
+    background-color: #4A3367;
+    padding: 0.75rem;
+}
+
+.bg-caixa {
+    background-color: #fff;
+    border-radius: 16px;
+}
+
+.box-ondulado {
+    background-color: #fff;
+    padding: 1px;
+    border-radius: 24px 0px 24px 0px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    color: #4A3367;
+    transition: color 0.2s ease;
+}
+
+.form-group {
+    padding: .5rem;
+}
+
+.btn-excel,
+.btn-excel:hover {
+    position: relative;
+    padding-left: 2.5rem !important;
+    background-color: #2b8a3e;
+    color: #fff;
+    border-radius: 0.5rem;
+    border: 0;
+}
+
+.btn-excel::before {
+    content: "";
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-excel" viewBox="0 0 16 16"> <path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.781l2.116 2.54a.5.5 0 0 0 .768-.641L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.219l-2.116-2.54z"/> <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/> </svg>') no-repeat center;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-excel" viewBox="0 0 16 16"> <path d="M5.884 6.68a.5.5 0 1 0-.768.64L7.349 10l-2.233 2.68a.5.5 0 0 0 .768.64L8 10.781l2.116 2.54a.5.5 0 0 0 .768-.641L8.651 10l2.233-2.68a.5.5 0 0 0-.768-.64L8 9.219l-2.116-2.54z"/> <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/> </svg>') no-repeat center;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+}
+
+.dt-paging-button {
+    padding: 0 !important;
+}
+
+.page-link {
+    color: var(--cor-primaria);
+}
+
+.active>.page-link,
+.page-link.active {
+    background-color: var(--cor-primaria) !important;
+    border-color: var(--cor-primaria);
+}
+
+.card-header {
+    background-color: var(--cor-primaria);
+    border-radius: 16px 0 !important;
+    color: #fff;
+    border-bottom: 0;
+}
+
+.btn-movi {
+    position: fixed;
+    bottom: 14px;
+    right: 24px;
+    z-index: 666;
+    background-color: var(--cor-primaria);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out both;
+}
+
+.animate-slide-left {
+    animation: slideInLeft 0.5s ease-out both;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+
+.card-dashboard {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    border: none !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--sombra-leve);
+}
+
+.card-dashboard:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--sombra-hover);
+}
+
+.card-dashboard:hover .icon-circle {
+    animation: pulse 0.6s ease-in-out;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--cor-rosa);
+    color: var(--cor-primaria);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-dashboard:hover .icon-circle {
+    background-color: var(--cor-primaria);
+    color: #fff;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--cor-primaria);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+
+.table-responsive.bg-caixa {
+    animation: fadeInUp 0.5s ease-out both;
+    box-shadow: var(--sombra-leve);
+}
+
+.table-striped > tbody > tr {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.table-striped > tbody > tr:hover {
+    background-color: rgba(255, 225, 255, 0.3) !important;
+    transform: scale(1.005);
+}
+
+
+.navbar {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.nav-link {
+    position: relative;
+    transition: all 0.3s ease !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--cor-primaria);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-link:hover::after {
+    width: 80%;
+    left: 10%;
+}
+
+
+.form-control,
+.form-select {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 0.2rem rgba(74, 51, 103, 0.15);
+    transform: scale(1.01);
+}
+
+
+.footer {
+    animation: fadeIn 0.8s ease-out 0.5s both;
+}
+
+
+main {
+    animation: fadeIn 0.4s ease-out both;
+}
+
+/* Força o alinhamento à esquerda em todas as tabelas (sobrescreve o DataTables) */
+table.dataTable th,
+table.dataTable td,
+table.dataTable th.dt-type-numeric, 
+table.dataTable td.dt-type-numeric,
+table.table th,
+table.table td {
+    text-align: left !important;
+}

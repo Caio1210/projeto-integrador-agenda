@@ -1,0 +1,2 @@
+@model GestaoAgenda.Models.Agendamento
+@{ ViewData["Title"] = "Novo agendamento"; }<h2 class="fw-bold mb-4">Novo agendamento</h2><div class="bg-caixa p-4"><form asp-action="Create"><partial name="_Form" model="Model"/><button class="btn btn-primary" type="submit">Salvar</button> <a asp-action="Index" class="btn btn-secondary">Cancelar</a></form></div>@section Scripts {<partial name="_ValidationScriptsPartial" />}
