@@ -15,7 +15,14 @@ builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 
 builder.Services.AddDbContext<GestaoAgendaContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 
 var app = builder.Build();
 
