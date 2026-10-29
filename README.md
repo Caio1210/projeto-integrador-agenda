@@ -2,6 +2,8 @@
 
 Sistema web em ASP.NET Core MVC para controle de agenda de um pequeno salão de beleza.
 
+Desenvolver um software com framework web que utilize banco de dados, inclua script web (Javascript), nuvem, uso de API, acessibilidade, controle de versão e testes. Opcionalmente, incluir análise de dados.
+
 ## Funcionalidades
 - Dashboard com resumo da agenda
 - Cadastro de clientes
