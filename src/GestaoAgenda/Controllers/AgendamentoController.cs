@@ -3,8 +3,39 @@ using GestaoAgenda.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 namespace GestaoAgenda.Controllers;
-public class AgendamentoController(IAgendamentoRepository repository, IClienteRepository clienteRepository, IServicoRepository servicoRepository) : Controller
+public class AgendamentoController(IAgendamentoRepository repository, IClienteRepository clienteRepository, IServicoRepository servicoRepository, ILogger<AgendamentoController> logger) : Controller
 {
+    [HttpGet("agenda/semana")]
+    public async Task<IActionResult> Semana(string? data)
+    {
+        TempData["link"] = "agendamento";
+        var selecionada = DateTime.Today;
+        if (data is not null &&
+            (!DateTime.TryParseExact(data, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out selecionada) ||
+             selecionada > DateTime.MaxValue.Date.AddDays(-7)))
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            return View(new AgendaSemanalViewModel(DateTime.Today)
+            {
+                Erro = "Data inválida. Selecione uma data válida para consultar a semana."
+            });
+        }
+
+        var model = new AgendaSemanalViewModel(selecionada);
+        try
+        {
+            model.Agendamentos = await repository.GetAgendamentosDaSemanaAsync(model.Inicio, model.FimExclusivo);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Erro ao carregar a agenda semanal iniciada em {Inicio}", model.Inicio);
+            Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            model.Erro = "Não foi possível carregar os agendamentos. Tente novamente em instantes.";
+        }
+        return View(model);
+    }
+
     private async Task CarregarListasAsync(int? clienteId = null, int? servicoId = null)
     {
         ViewData["ClienteId"] = new SelectList(await clienteRepository.GetClientesAsync(), "Id", "Nome", clienteId);

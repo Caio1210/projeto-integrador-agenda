@@ -17,6 +17,17 @@ public class AgendamentoRepository(GestaoAgendaContext context) : IAgendamentoRe
             .ThenBy(a => a.Hora)
             .ToListAsync();
 
+    public Task<List<Agendamento>> GetAgendamentosDaSemanaAsync(DateTime inicio, DateTime fimExclusivo) =>
+        _db.Agendamentos
+            .AsNoTracking()
+            .Include(a => a.Cliente)
+            .Include(a => a.Servico)
+            .Where(a => a.Data >= inicio && a.Data < fimExclusivo)
+            .OrderBy(a => a.Data)
+            .ThenBy(a => a.Hora)
+            .ThenBy(a => a.Id)
+            .ToListAsync();
+
     public Task<Agendamento?> GetAgendamentoAsync(int? id) =>
         _db.Agendamentos
             .Include(a => a.Cliente)

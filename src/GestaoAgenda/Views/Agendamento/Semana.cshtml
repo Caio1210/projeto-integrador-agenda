@@ -1,0 +1,91 @@
+@model GestaoAgenda.Models.AgendaSemanalViewModel
+@{
+    ViewData["Title"] = "Agenda semanal";
+    var cultura = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+    string DataUrl(DateTime data) => data.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h2 class="fw-bold mb-0">Agenda semanal</h2>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="Index" class="btn btn-outline-primary">Lista de agendamentos</a>
+        <a asp-action="Create" class="btn btn-primary">Novo agendamento</a>
+    </div>
+</div>
+<div class="bg-caixa p-3 p-md-4 mb-4">
+    <h3 class="h5 mb-3">@Model.Inicio.ToString("dd/MM/yyyy") a @Model.UltimoDia.ToString("dd/MM/yyyy")</h3>
+    <nav aria-label="Navegação entre semanas" class="d-flex flex-wrap gap-2 mb-3">
+        @if (Model.SemanaAnterior is DateTime anterior)
+        {
+            <a asp-action="Semana" asp-route-data="@DataUrl(anterior)" class="btn btn-outline-primary">Semana anterior</a>
+        }
+        <a asp-action="Semana" class="btn btn-outline-primary">Semana atual</a>
+        @if (Model.ProximaSemana is DateTime proxima)
+        {
+            <a asp-action="Semana" asp-route-data="@DataUrl(proxima)" class="btn btn-outline-primary">Próxima semana</a>
+        }
+    </nav>
+    <form asp-action="Semana" method="get" class="d-flex flex-wrap align-items-end gap-2">
+        <div>
+            <label for="data-semana" class="form-label">Data da semana</label>
+            <input id="data-semana" name="data" type="date" class="form-control"
+                   value="@DataUrl(Model.Inicio)" max="9999-12-24" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Exibir semana</button>
+    </form>
+</div>
+@if (Model.Erro is not null)
+{
+    <div class="alert alert-warning" role="alert">
+        <p>@Model.Erro</p>
+        <a asp-action="Semana" asp-route-data="@DataUrl(Model.Inicio)" class="btn btn-outline-primary">Tentar novamente</a>
+    </div>
+}
+else
+{
+    @if (Model.Agendamentos.Count == 0)
+    {
+        <p class="alert alert-info" role="status">Nenhum agendamento nesta semana.</p>
+    }
+    <div class="row g-3">
+        @for (var dia = Model.Inicio; dia < Model.FimExclusivo; dia = dia.AddDays(1))
+        {
+            var itens = Model.Agendamentos.Where(a => a.Data.Date == dia).OrderBy(a => a.Hora).ThenBy(a => a.Id).ToList();
+            var tituloId = $"dia-{DataUrl(dia)}";
+            <section class="col-12 col-md-6 col-xl-4" aria-labelledby="@tituloId">
+                <div class="bg-caixa p-3 h-100">
+                    <h3 id="@tituloId" class="h5 fw-bold">
+                        @dia.ToString("dddd", cultura) — @dia.ToString("dd/MM")
+                        @if (dia == DateTime.Today) { <span class="badge bg-secondary">Hoje</span> }
+                    </h3>
+                    @if (itens.Count == 0)
+                    {
+                        <p class="text-muted mb-0">Sem agendamentos.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var item in itens)
+                            {
+                                var horario = item.Hora.ToString("hh':'mm", System.Globalization.CultureInfo.InvariantCulture);
+                                <li class="border-top py-3 text-break">
+                                    <div class="d-flex flex-wrap justify-content-between gap-2">
+                                        <strong><time datetime="@horario">@horario</time></strong>
+                                        <span class="badge bg-secondary">@item.Status</span>
+                                    </div>
+                                    <p class="mb-1 mt-2"><strong>Cliente:</strong> @item.Cliente.Nome</p>
+                                    <p class="mb-2"><strong>Serviço:</strong> @item.Servico.Nome</p>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary"
+                                           aria-label="Detalhes do agendamento de @item.Cliente.Nome às @horario">Detalhes</a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary"
+                                           aria-label="Editar agendamento de @item.Cliente.Nome às @horario">Editar</a>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+}
