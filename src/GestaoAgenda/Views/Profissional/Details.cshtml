@@ -1,16 +1,46 @@
-@model GestaoAgenda.Models.Profissional
-@{ ViewData["Title"] = "Detalhes do profissional"; }
+@model GestaoAgenda.ViewModels.ProfissionalDetalhesViewModel
+@using GestaoAgenda.ViewModels
+@{ ViewData["Title"] = "Detalhes do profissional"; var profissional = Model.Profissional; }
 <h2 class="fw-bold mb-4">Detalhes do profissional</h2>
 <div class="bg-caixa p-3 p-md-4 text-break">
     <dl class="row">
-        <dt class="col-sm-3">Nome</dt><dd class="col-sm-9">@Model.Nome</dd>
-        <dt class="col-sm-3">Telefone</dt><dd class="col-sm-9">@Model.Telefone</dd>
-        <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Email) ? "Não informado" : Model.Email)</dd>
-        <dt class="col-sm-3">Especialidade</dt><dd class="col-sm-9">@Model.Especialidade</dd>
-        <dt class="col-sm-3">Status</dt><dd class="col-sm-9">@(Model.Ativo ? "Ativo" : "Inativo")</dd>
+        <dt class="col-sm-3">Nome</dt><dd class="col-sm-9">@profissional.Nome</dd>
+        <dt class="col-sm-3">Telefone</dt><dd class="col-sm-9">@profissional.Telefone</dd>
+        <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9">@(string.IsNullOrEmpty(profissional.Email) ? "Não informado" : profissional.Email)</dd>
+        <dt class="col-sm-3">Especialidade</dt><dd class="col-sm-9">@profissional.Especialidade</dd>
+        <dt class="col-sm-3">Status</dt><dd class="col-sm-9">@(profissional.Ativo ? "Ativo" : "Inativo")</dd>
     </dl>
+    <section aria-labelledby="titulo-servicos" class="mb-4">
+        <h3 id="titulo-servicos" class="h4 fw-bold">Serviços oferecidos</h3>
+        @if (Model.Servicos.Count == 0)
+        {
+            <p class="text-muted">Nenhum serviço associado a este profissional.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <caption class="visually-hidden">Configuração dos serviços deste profissional</caption>
+                    <thead><tr><th scope="col">Serviço</th><th scope="col">Preço</th><th scope="col">Duração</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+                    <tbody>
+                    @foreach (var oferta in Model.Servicos)
+                    {
+                        <tr>
+                            <td>@oferta.Servico.Nome</td>
+                            <td class="text-nowrap">R$ @PrecoPtBr.Formatar(oferta.Preco)</td>
+                            <td class="text-nowrap">@oferta.DuracaoMinutos min</td>
+                            <td><span class="badge @(oferta.Ativo ? "bg-success" : "bg-secondary")">@(oferta.Ativo ? "Ativo" : "Inativo")</span></td>
+                            <td><a asp-action="Edit" asp-route-id="@profissional.Id" asp-fragment="servico-@oferta.ServicoId"
+                                   class="btn btn-sm btn-outline-secondary" aria-label="Editar oferta de @oferta.Servico.Nome">Editar</a></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
     <div class="d-flex flex-wrap gap-2">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-action="Edit" asp-route-id="@profissional.Id" class="btn btn-primary">Editar</a>
         <a asp-action="Index" class="btn btn-secondary">Voltar</a>
     </div>
 </div>

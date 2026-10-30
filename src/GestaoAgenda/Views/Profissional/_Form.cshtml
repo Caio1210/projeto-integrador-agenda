@@ -1,5 +1,5 @@
-@model GestaoAgenda.Models.Profissional
-<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+@model GestaoAgenda.ViewModels.ProfissionalFormViewModel
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
 <div class="row">
     <div class="col-12 col-md-6 mb-3">
         <label asp-for="Nome" class="form-label"></label>
@@ -26,3 +26,5 @@
     <input asp-for="Ativo" class="form-check-input" />
     <label asp-for="Ativo" class="form-check-label"></label>
 </div>
+<input type="hidden" asp-for="TokenEnvio" />
+<partial name="_ServicosOferecidos" model="Model" />

@@ -1,4 +1,5 @@
 using GestaoAgenda.Data;
+using GestaoAgenda.Services;
 using GestaoAgenda.Models;
 using GestaoAgenda.Repositories;
 using GestaoAgenda.Repositories.Interfaces;
@@ -11,6 +12,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IProfissionalRepository, ProfissionalRepository>();
+builder.Services.AddScoped<ProfissionalServicoService>();
+builder.Services.AddScoped<AgendamentoService>();
+builder.Services.AddSingleton<EnviosFormularioProfissional>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 builder.Services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
 

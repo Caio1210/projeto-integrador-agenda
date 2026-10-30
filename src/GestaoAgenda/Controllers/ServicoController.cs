@@ -19,5 +19,5 @@ public class ServicoController(IServicoRepository repository) : Controller
     [Route("servico/apagar/{id}")]
     public async Task<IActionResult> Delete(int? id) { TempData["link"] = "servico"; if (id == null) return NotFound(); var item = await repository.GetServicoAsync(id); return item == null ? NotFound() : View(item); }
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken, Route("servico/apagar/{id}")]
-    public async Task<IActionResult> DeleteConfirmed(int id) { try { await repository.DeleteServicoAsync(id); } catch { TempData["Erro"] = "Não é possível excluir um serviço que possui agendamentos."; } return RedirectToAction(nameof(Index)); }
+    public async Task<IActionResult> DeleteConfirmed(int id) { try { await repository.DeleteServicoAsync(id); } catch { TempData["Erro"] = "Não foi possível excluir o serviço. Verifique se possui agendamentos ou vínculos com profissionais."; } return RedirectToAction(nameof(Index)); }
 }

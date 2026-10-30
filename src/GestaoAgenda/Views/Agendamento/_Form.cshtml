@@ -1,6 +1,78 @@
-@model GestaoAgenda.Models.Agendamento
-<div class="mb-3"><label asp-for="ClienteId" class="form-label"></label><select asp-for="ClienteId" class="form-select" asp-items="ViewBag.ClienteId"><option value="">Selecione o cliente</option></select><span asp-validation-for="ClienteId" class="text-danger"></span></div>
-<div class="mb-3"><label asp-for="ServicoId" class="form-label"></label><select asp-for="ServicoId" class="form-select" asp-items="ViewBag.ServicoId"><option value="">Selecione o serviço</option></select><span asp-validation-for="ServicoId" class="text-danger"></span></div>
-<div class="row"><div class="col-md-6 mb-3"><label asp-for="Data" class="form-label"></label><input asp-for="Data" class="form-control" type="date"/><span asp-validation-for="Data" class="text-danger"></span></div><div class="col-md-6 mb-3"><label asp-for="Hora" class="form-label"></label><input asp-for="Hora" class="form-control" type="time"/><span asp-validation-for="Hora" class="text-danger"></span></div></div>
-<div class="mb-3"><label asp-for="Status" class="form-label"></label><select asp-for="Status" class="form-select"><option>Agendado</option><option>Concluído</option><option>Cancelado</option></select><span asp-validation-for="Status" class="text-danger"></span></div>
-<div class="mb-3"><label asp-for="Observacao" class="form-label"></label><textarea asp-for="Observacao" class="form-control"></textarea></div>
+@model GestaoAgenda.ViewModels.AgendamentoFormViewModel
+@using GestaoAgenda.ViewModels
+@{
+    var ofertaAtual = Model.Ofertas.FirstOrDefault(o => o.Id == Model.ProfissionalServicoId);
+    var fimAtual = Model.Data is DateTime data && Model.Hora is TimeSpan hora
+        ? IntervaloAgendamento.Termino(data, hora, ofertaAtual?.DuracaoMinutos) : null;
+}
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
+@if (Model.Legado)
+{
+    <p class="alert alert-warning">Esta reserva possui informações históricas não registradas. Observação e status podem ser mantidos sem preencher valores antigos. Para reagendar, selecione uma oferta ativa; não serão inferidos preços ou durações passados.</p>
+}
+<div data-agendamento-ofertas data-url="@Url.Action("Profissionais")"
+     data-servico-original="@Model.ServicoOriginalId" data-oferta-original="@Model.AssociacaoOriginalId"
+     data-preco-original="@(Model.PrecoOriginal is decimal preco ? PrecoPtBr.Formatar(preco) : "")"
+     data-duracao-original="@Model.DuracaoOriginal">
+    <div class="mb-3">
+        <label asp-for="ClienteId" class="form-label"></label>
+        <select asp-for="ClienteId" class="form-select" asp-items="Model.Clientes"><option value="">Selecione o cliente</option></select>
+        <span asp-validation-for="ClienteId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ServicoId" class="form-label"></label>
+        <select asp-for="ServicoId" class="form-select" asp-items="Model.Servicos" data-servico><option value="">Selecione o serviço</option></select>
+        <span asp-validation-for="ServicoId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ProfissionalServicoId" class="form-label"></label>
+        <select asp-for="ProfissionalServicoId" class="form-select" data-profissional>
+            <option value="">Selecione um profissional</option>
+            @foreach (var oferta in Model.Ofertas)
+            {
+                <option value="@oferta.Id" data-preco="@oferta.Preco" data-duracao="@oferta.DuracaoMinutos"
+                        data-historica="@oferta.Historica.ToString().ToLowerInvariant()">@oferta.Nome</option>
+            }
+        </select>
+        <span asp-validation-for="ProfissionalServicoId" class="text-danger"></span>
+        <p class="small text-muted mt-1">Novas reservas exigem profissional e oferta ativos. A agenda continua global para o salão.</p>
+        <button type="submit" name="acao" value="carregar-profissionais" formnovalidate
+                class="btn btn-sm btn-outline-secondary" data-carregar-profissionais>Carregar profissionais</button>
+        <p class="small mt-2" data-erro-ofertas role="status" aria-live="polite">@(Model.ServicoId > 0 && Model.Ofertas.Count == 0 ? "Nenhum profissional ativo oferece este serviço." : "")</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Data" class="form-label"></label>
+            <input asp-for="Data" class="form-control" type="date" data-data />
+            <span asp-validation-for="Data" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Hora" class="form-label"></label>
+            <input asp-for="Hora" asp-format="{0:hh':'mm':'ss}" class="form-control" type="time" step="1" data-hora />
+            <span asp-validation-for="Hora" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="bg-light rounded p-3 mb-3" aria-live="polite">
+        <p class="mb-1"><strong>Preço aplicado:</strong> <span data-resumo-preco>@(ofertaAtual?.Preco is string valor ? $"R$ {valor}" : "Não informado")</span></p>
+        <p class="mb-1"><strong>Duração aplicada:</strong> <span data-resumo-duracao>@(ofertaAtual?.DuracaoMinutos is int minutos ? $"{minutos} min" : "Não informada")</span></p>
+        <p class="mb-1"><strong>Término previsto:</strong> <span data-resumo-termino>@(fimAtual?.ToString("dd/MM/yyyy HH:mm:ss") ?? "Não informado")</span></p>
+        <p class="small mb-0">Valores reservados são preservados ao manter a mesma oferta. Uma nova oferta usa os valores atuais, confirmados no servidor.</p>
+        <p class="small text-warning mb-0" data-aviso-historico></p>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="Status" class="form-label"></label>
+    <select asp-for="Status" class="form-select"><option>Agendado</option><option>Concluído</option><option>Cancelado</option></select>
+    <span asp-validation-for="Status" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Observacao" class="form-label"></label>
+    <textarea asp-for="Observacao" class="form-control" maxlength="500"></textarea>
+    <span asp-validation-for="Observacao" class="text-danger"></span>
+</div>
+@if (!Model.PodeSalvar)
+{
+    <p class="alert alert-warning" role="alert">O formulário não foi carregado completamente. Recarregue a página antes de salvar.</p>
+    <a asp-action="@(Model.Id == 0 ? "Create" : "Edit")" asp-route-id="@(Model.Id == 0 ? null : Model.Id)"
+       class="btn btn-outline-primary mb-3">Recarregar formulário</a>
+}

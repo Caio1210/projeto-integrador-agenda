@@ -31,12 +31,13 @@ public class ProfissionalMigrationTests
     }
 
     [Fact]
-    public void SnapshotCorrespondeAoModeloAtual()
+    public void SnapshotAtualizadoEScriptDaPrimeiraMigrationPreservado()
     {
         using var db = new GestaoAgendaContext(new DbContextOptionsBuilder<GestaoAgendaContext>()
             .UseSqlServer("Server=localhost;Database=SomenteMetadados;Integrated Security=True").Options);
         Assert.False(db.Database.HasPendingModelChanges());
-        var script = db.GetService<IMigrator>().GenerateScript(options: MigrationsSqlGenerationOptions.Idempotent);
+        var script = db.GetService<IMigrator>().GenerateScript("0", "AdicionarProfissionais",
+            MigrationsSqlGenerationOptions.Idempotent);
         Assert.Contains("CREATE TABLE [Profissional]", script);
         foreach (var tabela in new[] { "Cliente", "Servico", "Agendamento" })
         {

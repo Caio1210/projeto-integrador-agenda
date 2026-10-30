@@ -11,8 +11,10 @@ public class AgendamentoRepository(GestaoAgendaContext context) : IAgendamentoRe
 
     public Task<List<Agendamento>> GetAgendamentosAsync() =>
         _db.Agendamentos
+            .AsNoTracking()
             .Include(a => a.Cliente)
             .Include(a => a.Servico)
+            .Include(a => a.ProfissionalServico).ThenInclude(ps => ps!.Profissional)
             .OrderBy(a => a.Data)
             .ThenBy(a => a.Hora)
             .ToListAsync();
@@ -22,6 +24,7 @@ public class AgendamentoRepository(GestaoAgendaContext context) : IAgendamentoRe
             .AsNoTracking()
             .Include(a => a.Cliente)
             .Include(a => a.Servico)
+            .Include(a => a.ProfissionalServico).ThenInclude(ps => ps!.Profissional)
             .Where(a => a.Data >= inicio && a.Data < fimExclusivo)
             .OrderBy(a => a.Data)
             .ThenBy(a => a.Hora)
@@ -30,8 +33,10 @@ public class AgendamentoRepository(GestaoAgendaContext context) : IAgendamentoRe
 
     public Task<Agendamento?> GetAgendamentoAsync(int? id) =>
         _db.Agendamentos
+            .AsNoTracking()
             .Include(a => a.Cliente)
             .Include(a => a.Servico)
+            .Include(a => a.ProfissionalServico).ThenInclude(ps => ps!.Profissional)
             .FirstOrDefaultAsync(a => a.Id == id);
 
     public async Task<bool> HorarioDisponivelAsync(DateTime data, TimeSpan hora, int? id = null)

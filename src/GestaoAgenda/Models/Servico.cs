@@ -25,4 +25,5 @@ public class Servico
     public decimal Valor { get; set; }
 
     public virtual ICollection<Agendamento> Agendamentos { get; set; } = [];
+    public virtual ICollection<ProfissionalServico> Profissionais { get; set; } = [];
 }

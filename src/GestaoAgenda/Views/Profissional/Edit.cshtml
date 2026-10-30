@@ -1,12 +1,17 @@
-@model GestaoAgenda.Models.Profissional
+@model GestaoAgenda.ViewModels.ProfissionalFormViewModel
 @{ ViewData["Title"] = "Editar profissional"; }
 <h2 class="fw-bold mb-4">Editar profissional</h2>
 <div class="bg-caixa p-3 p-md-4">
-    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" data-profissional-form>
         <input type="hidden" asp-for="Id" />
         <partial name="_Form" model="Model" />
+        @if (!Model.PodeSalvar)
+        {
+            <p class="alert alert-warning" role="alert">O envio está indisponível. Recarregue o formulário para tentar novamente.</p>
+            <a asp-action="@ViewContext.RouteData.Values["action"]" asp-route-id="@(Model.Id == 0 ? null : Model.Id)" class="btn btn-outline-primary mb-3">Recarregar formulário</a>
+        }
         <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="submit" class="btn btn-primary" disabled="@(!Model.PodeSalvar)" data-salvar>Salvar</button>
             <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
         </div>
     </form>

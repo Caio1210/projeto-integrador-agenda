@@ -37,6 +37,9 @@ namespace GestaoAgenda.Data.Migrations
                     b.Property<DateTime>("Data")
                         .HasColumnType("date");
 
+                    b.Property<int?>("DuracaoMinutosAplicada")
+                        .HasColumnType("int");
+
                     b.Property<TimeSpan>("Hora")
                         .HasColumnType("time");
 
@@ -44,6 +47,13 @@ namespace GestaoAgenda.Data.Migrations
                         .HasMaxLength(500)
                         .IsUnicode(false)
                         .HasColumnType("varchar(500)");
+
+                    b.Property<decimal?>("PrecoAplicado")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ProfissionalServicoId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ServicoId")
                         .HasColumnType("int");
@@ -58,13 +68,20 @@ namespace GestaoAgenda.Data.Migrations
 
                     b.HasIndex("ClienteId");
 
+                    b.HasIndex("ProfissionalServicoId");
+
                     b.HasIndex("ServicoId");
 
                     b.HasIndex("Data", "Hora")
                         .IsUnique()
                         .HasFilter("[Status] <> 'Cancelado'");
 
-                    b.ToTable("Agendamento", (string)null);
+                    b.ToTable("Agendamento", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Agendamento_DuracaoAplicada", "[DuracaoMinutosAplicada] IS NULL OR [DuracaoMinutosAplicada] BETWEEN 1 AND 1440");
+
+                            t.HasCheckConstraint("CK_Agendamento_PrecoAplicado", "[PrecoAplicado] IS NULL OR [PrecoAplicado] > 0");
+                        });
                 });
 
             modelBuilder.Entity("GestaoAgenda.Models.Cliente", b =>
@@ -136,6 +153,45 @@ namespace GestaoAgenda.Data.Migrations
                     b.ToTable("Profissional", (string)null);
                 });
 
+            modelBuilder.Entity("GestaoAgenda.Models.ProfissionalServico", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("DuracaoMinutos")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Preco")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProfissionalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServicoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServicoId");
+
+                    b.HasIndex("ProfissionalId", "ServicoId")
+                        .IsUnique();
+
+                    b.ToTable("ProfissionalServico", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ProfissionalServico_Duracao", "[DuracaoMinutos] BETWEEN 1 AND 1440");
+
+                            t.HasCheckConstraint("CK_ProfissionalServico_Preco", "[Preco] > 0");
+                        });
+                });
+
             modelBuilder.Entity("GestaoAgenda.Models.Servico", b =>
                 {
                     b.Property<int>("Id")
@@ -174,6 +230,11 @@ namespace GestaoAgenda.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("GestaoAgenda.Models.ProfissionalServico", "ProfissionalServico")
+                        .WithMany("Agendamentos")
+                        .HasForeignKey("ProfissionalServicoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("GestaoAgenda.Models.Servico", "Servico")
                         .WithMany("Agendamentos")
                         .HasForeignKey("ServicoId")
@@ -181,6 +242,27 @@ namespace GestaoAgenda.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Cliente");
+
+                    b.Navigation("ProfissionalServico");
+
+                    b.Navigation("Servico");
+                });
+
+            modelBuilder.Entity("GestaoAgenda.Models.ProfissionalServico", b =>
+                {
+                    b.HasOne("GestaoAgenda.Models.Profissional", "Profissional")
+                        .WithMany("ServicosOferecidos")
+                        .HasForeignKey("ProfissionalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GestaoAgenda.Models.Servico", "Servico")
+                        .WithMany("Profissionais")
+                        .HasForeignKey("ServicoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Profissional");
 
                     b.Navigation("Servico");
                 });
@@ -190,9 +272,21 @@ namespace GestaoAgenda.Data.Migrations
                     b.Navigation("Agendamentos");
                 });
 
+            modelBuilder.Entity("GestaoAgenda.Models.Profissional", b =>
+                {
+                    b.Navigation("ServicosOferecidos");
+                });
+
+            modelBuilder.Entity("GestaoAgenda.Models.ProfissionalServico", b =>
+                {
+                    b.Navigation("Agendamentos");
+                });
+
             modelBuilder.Entity("GestaoAgenda.Models.Servico", b =>
                 {
                     b.Navigation("Agendamentos");
+
+                    b.Navigation("Profissionais");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,55 @@
+@model GestaoAgenda.ViewModels.ProfissionalFormViewModel
+<section aria-labelledby="titulo-servicos" class="mt-4 mb-4">
+    <h3 id="titulo-servicos" class="h4 fw-bold">Serviços oferecidos</h3>
+    <p class="text-muted">Selecione as ofertas e personalize os valores. Os padrões do salão não serão alterados. Desmarcar uma oferta existente a torna inativa, sem apagar seu histórico.</p>
+    <p class="small">Preços em reais: use vírgula para os centavos (ex.: 40,00 ou 1.234,56). Duração de 1 a 1.440 minutos.</p>
+    @if (ViewData["ErroServicos"] is string erro)
+    {
+        <div class="alert alert-warning" role="alert">@erro</div>
+    }
+    else if (Model.Servicos.Count == 0)
+    {
+        <p class="alert alert-info">Nenhum serviço cadastrado no salão. Você pode salvar o profissional e configurar suas ofertas depois.</p>
+    }
+    <div class="row g-3">
+        @for (var i = 0; i < Model.Servicos.Count; i++)
+        {
+            <div class="col-12" id="servico-@Model.Servicos[i].ServicoId" data-oferta>
+                <div class="border rounded p-3">
+                    <input type="hidden" asp-for="Servicos[i].ServicoId" />
+                    <div class="form-check mb-3">
+                        <input asp-for="Servicos[i].Selecionado" class="form-check-input" data-selecionado />
+                        <label asp-for="Servicos[i].Selecionado" class="form-check-label fw-bold">@Model.Servicos[i].NomeServico</label>
+                    </div>
+                    <fieldset data-oferta-campos>
+                        <legend class="visually-hidden">Configuração de @Model.Servicos[i].NomeServico</legend>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <label asp-for="Servicos[i].Preco" class="form-label">Preço (R$)</label>
+                                <input asp-for="Servicos[i].Preco" type="text" inputmode="decimal" maxlength="24" class="form-control"
+                                       data-preco aria-describedby="preco-erro-@i" />
+                                <span asp-validation-for="Servicos[i].Preco" class="text-danger"></span>
+                                <span id="preco-erro-@i" class="text-danger small" data-preco-erro aria-live="polite"></span>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label asp-for="Servicos[i].DuracaoMinutos" class="form-label">Duração (minutos)</label>
+                                <input asp-for="Servicos[i].DuracaoMinutos" type="number" min="1" max="1440" step="1"
+                                       class="form-control" data-duracao />
+                                <span asp-validation-for="Servicos[i].DuracaoMinutos" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 col-md-4 d-flex align-items-center">
+                                <div class="form-check">
+                                    <input asp-for="Servicos[i].Ativo" class="form-check-input" data-oferta-ativo />
+                                    <label asp-for="Servicos[i].Ativo" class="form-check-label">Oferta ativa</label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <span class="badge bg-secondary mt-3" data-status-oferta>
+                        @(Model.Servicos[i].Selecionado ? (Model.Servicos[i].Ativo ? "Ativo" : "Inativo") : "Não selecionado")
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+</section>

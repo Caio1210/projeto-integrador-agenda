@@ -7,6 +7,7 @@ public class GestaoAgendaContext(DbContextOptions<GestaoAgendaContext> options) 
 {
     public DbSet<Cliente> Clientes => Set<Cliente>();
     public DbSet<Profissional> Profissionais => Set<Profissional>();
+    public DbSet<ProfissionalServico> ProfissionalServicos => Set<ProfissionalServico>();
     public DbSet<Servico> Servicos => Set<Servico>();
     public DbSet<Agendamento> Agendamentos => Set<Agendamento>();
 
@@ -22,6 +23,25 @@ public class GestaoAgendaContext(DbContextOptions<GestaoAgendaContext> options) 
             entity.Property(e => e.Email).HasMaxLength(120).IsUnicode(false);
             entity.Property(e => e.Especialidade).HasMaxLength(120).IsUnicode(false).IsRequired();
             entity.Property(e => e.Ativo).IsRequired();
+        });
+
+        modelBuilder.Entity<ProfissionalServico>(entity =>
+        {
+            entity.ToTable("ProfissionalServico", table =>
+            {
+                table.HasCheckConstraint("CK_ProfissionalServico_Preco", "[Preco] > 0");
+                table.HasCheckConstraint("CK_ProfissionalServico_Duracao", "[DuracaoMinutos] BETWEEN 1 AND 1440");
+            });
+            entity.Property(e => e.Preco).HasPrecision(18, 2);
+            entity.HasIndex(e => new { e.ProfissionalId, e.ServicoId }).IsUnique();
+            entity.HasOne(e => e.Profissional)
+                .WithMany(p => p.ServicosOferecidos)
+                .HasForeignKey(e => e.ProfissionalId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Servico)
+                .WithMany(s => s.Profissionais)
+                .HasForeignKey(e => e.ServicoId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Cliente>(entity =>
@@ -42,7 +62,18 @@ public class GestaoAgendaContext(DbContextOptions<GestaoAgendaContext> options) 
 
         modelBuilder.Entity<Agendamento>(entity =>
         {
-            entity.ToTable("Agendamento");
+            entity.ToTable("Agendamento", table =>
+            {
+                table.HasCheckConstraint("CK_Agendamento_PrecoAplicado",
+                    "[PrecoAplicado] IS NULL OR [PrecoAplicado] > 0");
+                table.HasCheckConstraint("CK_Agendamento_DuracaoAplicada",
+                    "[DuracaoMinutosAplicada] IS NULL OR [DuracaoMinutosAplicada] BETWEEN 1 AND 1440");
+            });
+            entity.Property(e => e.PrecoAplicado).HasPrecision(18, 2);
+            entity.HasOne(e => e.ProfissionalServico)
+                .WithMany(ps => ps.Agendamentos)
+                .HasForeignKey(e => e.ProfissionalServicoId)
+                .OnDelete(DeleteBehavior.Restrict);
             entity.Property(e => e.Status).HasMaxLength(20).IsUnicode(false).IsRequired();
             entity.Property(e => e.Observacao).HasMaxLength(500).IsUnicode(false);
             entity.Property(e => e.Data).HasColumnType("date");

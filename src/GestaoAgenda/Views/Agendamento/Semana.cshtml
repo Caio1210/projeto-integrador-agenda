@@ -74,6 +74,8 @@ else
                                     </div>
                                     <p class="mb-1 mt-2"><strong>Cliente:</strong> @item.Cliente.Nome</p>
                                     <p class="mb-2"><strong>Serviço:</strong> @item.Servico.Nome</p>
+                                    <p class="mb-1"><strong>Profissional:</strong> @(item.ProfissionalServico?.Profissional.Nome ?? "Não informado")</p>
+                                    <p class="mb-2"><strong>Término:</strong> @(item.Termino?.ToString("dd/MM HH:mm") ?? "Não informado")</p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary"
                                            aria-label="Detalhes do agendamento de @item.Cliente.Nome às @horario">Detalhes</a>

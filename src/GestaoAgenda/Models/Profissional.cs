@@ -29,4 +29,6 @@ public class Profissional
 
     [Display(Name = "Profissional ativo")]
     public bool Ativo { get; set; } = true;
+
+    public virtual ICollection<ProfissionalServico> ServicosOferecidos { get; set; } = [];
 }
