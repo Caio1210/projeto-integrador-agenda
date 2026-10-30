@@ -131,5 +131,10 @@ using (var scope = app.Services.CreateScope())
         await db.SaveChangesAsync();
     }
 }
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<GestaoAgenda.Data.GestaoAgendaContext>();
+    context.Database.Migrate();
+}
 
 app.Run();
