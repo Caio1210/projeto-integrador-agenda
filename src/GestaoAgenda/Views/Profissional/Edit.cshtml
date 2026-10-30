@@ -1,0 +1,16 @@
+@model GestaoAgenda.Models.Profissional
+@{ ViewData["Title"] = "Editar profissional"; }
+<h2 class="fw-bold mb-4">Editar profissional</h2>
+<div class="bg-caixa p-3 p-md-4">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <partial name="_Form" model="Model" />
+        <div class="d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ProfissionalValidationScripts" />
+}

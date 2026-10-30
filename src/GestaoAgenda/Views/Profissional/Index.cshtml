@@ -1,0 +1,43 @@
+@model IEnumerable<GestaoAgenda.Models.Profissional>
+@{ ViewData["Title"] = "Profissionais"; }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h2 class="fw-bold mb-0">Profissionais</h2>
+    <a asp-action="Create" class="btn btn-primary">Novo profissional</a>
+</div>
+@if (TempData["Sucesso"] is string sucesso)
+{
+    <div class="alert alert-success" role="status">@sucesso</div>
+}
+@if (ViewData["Erro"] is string erro)
+{
+    <div class="alert alert-warning" role="alert">
+        <p>@erro</p>
+        <a asp-action="Index" class="btn btn-outline-primary">Tentar novamente</a>
+    </div>
+}
+else if (!Model.Any())
+{
+    <p class="alert alert-info" role="status">Nenhum profissional cadastrado.</p>
+}
+else
+{
+    <div class="table-responsive bg-caixa p-3 p-md-4">
+        <table class="table table-striped align-middle">
+            <caption class="visually-hidden">Profissionais cadastrados</caption>
+            <thead><tr><th scope="col">Nome</th><th scope="col">Telefone</th><th scope="col">E-mail</th><th scope="col">Especialidade</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nome</td><td>@item.Telefone</td><td>@item.Email</td><td>@item.Especialidade</td>
+                    <td><span class="badge @(item.Ativo ? "bg-success" : "bg-secondary")">@(item.Ativo ? "Ativo" : "Inativo")</span></td>
+                    <td><div class="d-flex flex-wrap gap-2">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" aria-label="Detalhes de @item.Nome">Detalhes</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" aria-label="Editar @item.Nome">Editar</a>
+                    </div></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

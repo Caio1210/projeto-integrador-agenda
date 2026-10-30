@@ -6,12 +6,23 @@ namespace GestaoAgenda.Data;
 public class GestaoAgendaContext(DbContextOptions<GestaoAgendaContext> options) : DbContext(options)
 {
     public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<Profissional> Profissionais => Set<Profissional>();
     public DbSet<Servico> Servicos => Set<Servico>();
     public DbSet<Agendamento> Agendamentos => Set<Agendamento>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+        modelBuilder.Entity<Profissional>(entity =>
+        {
+            entity.ToTable("Profissional");
+            entity.Property(e => e.Nome).HasMaxLength(120).IsUnicode(false).IsRequired();
+            entity.Property(e => e.Telefone).HasMaxLength(20).IsUnicode(false).IsRequired();
+            entity.Property(e => e.Email).HasMaxLength(120).IsUnicode(false);
+            entity.Property(e => e.Especialidade).HasMaxLength(120).IsUnicode(false).IsRequired();
+            entity.Property(e => e.Ativo).IsRequired();
+        });
 
         modelBuilder.Entity<Cliente>(entity =>
         {

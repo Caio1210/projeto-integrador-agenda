@@ -1,3 +1,7 @@
 <Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/GestaoAgenda.Tests/GestaoAgenda.Tests.csproj" />
+  </Folder>
   <Project Path="src/GestaoAgenda/GestaoAgenda.csproj" Id="fe943b75-6e47-44bb-bcf0-f8a5bd0c9692" />
 </Solution>
